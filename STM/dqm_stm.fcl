@@ -1,0 +1,42 @@
+#include "Offline/fcl/minimalMessageService.fcl"
+#include "Offline/fcl/standardServices.fcl"
+
+process_name : DQM
+
+source : { module_type : RootInput }
+
+services : @local::Services.Reco
+
+physics:
+{
+  producers : {}
+  analyzers : {
+   dqmStm :
+   {
+     module_type : DqmStm
+     phHPGeTag: "makeSTMDigis:phHPGe"
+     phLaBrTag: "makeSTMDigis:phLaBr"
+     rawHPGeTag: "makeSTMDigis:rawHPGe"
+     rawLaBrTag: "makeSTMDigis:rawLaBr"
+     zsHPGeTag: "makeSTMDigis:zsHPGe"
+     zsLaBrTag: "makeSTMDigis:zsLaBr"
+     HPGefragSummaryTag: "makeSTMDigis:stmFragSummaryHPGe"
+     LaBrfragSummaryTag: "makeSTMDigis:stmFragSummaryLaBr"
+   }
+
+   dqmStm2 :
+   {
+     module_type : DqmStm2
+     phHPGeDigisTag: "makeSTMDigis:phHPGe"
+     phLaBrDigisTag: "makeSTMDigis:phLaBr"
+     fragSummaryHPGeTag: "makeSTMDigis:stmFragSummaryHPGe"
+     fragSummaryLaBrTag: "makeSTMDigis:stmFragSummaryLaBr"
+   }
+
+  }  
+
+ MyTrigPath : []
+ MyEndPath : [dqmStm,dqmStm2]
+}
+
+services.TFileService.fileName : "dqm_stm_comparison.root"
