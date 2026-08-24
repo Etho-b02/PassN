@@ -8,8 +8,6 @@ source : {
    maxEvents   : -1
 }
 
-
-
 physics : {
    producers : {
       makeSTMDigis : {
@@ -46,14 +44,14 @@ physics : {
 
       phTreeLaBr : {
          module_type  :  STMPHDigiTree
-	 phDigiTag    :  "makeSTMDigis:phLaBr"
+	 phDigiTag    :  "mkaeSTMDigis:phLaBr"
       }
 
    }
 
    t1 : [ makeSTMDigis ]
-   e1 : [ stmOutput ]
-   e2 : [ dqmStm, phTreeHPGe, phTreeLaBr ]
+   e1 : [ dqmStmOutput, stmOutput ]
+   e2 : [phTreeHPGe, phTreeLaBr ]
    #e1 : [ ]
    #e1 : [ frag, stmOutput ]
 
@@ -70,7 +68,9 @@ outputs : {
    }
 }
 
-services.TFileService.fileName : "stm_DQM.root"
+services.TFileSerice.fileName : "stm_DQM.root"
 # print summaries
+services.DbService.verbose : true
 services.scheduler.wantSummary : true
 services.TimeTracker.printSummary : true
+services.message.destinations.log.outputStatistics : true
