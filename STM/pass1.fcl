@@ -1,14 +1,20 @@
+
 # pass1 for data from STM modules
 
+#include "Offline/fcl/standardServices.fcl"
+#include "Offline/STMReco/fcl/prolog.fcl"
+
 process_name : STMPass1
+
+services : {
+   @table::Services.Core
+}
 
 source : {
    module_type : RootInput
    fileNames   : @nil
    maxEvents   : -1
 }
-
-
 
 physics : {
    producers : {
@@ -17,10 +23,8 @@ physics : {
          stmTag                          : "daq:ContainerSTM"
          verbosityLevel                  : 1
          saveSTMFragSummary              : true
-         saveRawWaveformsWithHeaderHPGe  : false
          saveRawWaveformsHPGe            : true
          saveZSWaveformsHPGe             : true
-         saveRawWaveformsWithHeaderLaBr  : false
          saveRawWaveformsLaBr            : true
          saveZSWaveformsLaBr             : true
         }
@@ -51,14 +55,13 @@ physics : {
 
    }
 
-   t1 : [ makeSTMDigis ]
-   e1 : [ stmOutput ]
-   e2 : [ dqmStm, phTreeHPGe, phTreeLaBr ]
-   #e1 : [ ]
-   #e1 : [ frag, stmOutput ]
+   t1               : [ makeSTMDigis ]
+   e1               : [ stmOutput ]
+   dqmPath          : [ dqmStm ]
+   ntuplePath       : [ phTreeHPGe, phTreeLaBr ] 
 
-   trigger_paths  : [t1]
-   end_paths      : [e1, e2]
+   trigger_paths  : [ t1 ]
+   end_paths      : [ dqmPath, ntuplePath, e1 ]
 
 }
 
@@ -66,11 +69,17 @@ outputs : {
    stmOutput : {
       module_type    : RootOutput
       fileName       : "dig.stm.art"
-      outputCommands : [ "keep *_*_*_*", "drop artdaq::*_*_*_*" ]
+      outputCommands : [ "drop *_*_*_*",
+                         "keep mu2e::*_makeSTMDigis_phHPGe_*",
+			 "keep mu2e::*_makeSTMDigis_phLaBr_*",
+			 
+			 "keep mu2e::*_makeSTMDigis_stmFragSummaryHPGe_*",
+			 "keep mu2e::*_makeSTMDigis_stmFragSummaryLaBr_*"]
    }
 }
 
-services.TFileService.fileName : "stm_DQM.root"
+services.TFileService.fileName : "stm_Combined.root"
 # print summaries
 services.scheduler.wantSummary : true
 services.TimeTracker.printSummary : true
+service.message.destination.log.outputStatitsics : true
