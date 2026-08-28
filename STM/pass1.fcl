@@ -82,4 +82,4 @@ services.TFileService.fileName : "stm_Combined.root"
 # print summaries
 services.scheduler.wantSummary : true
 services.TimeTracker.printSummary : true
-service.message.destination.log.outputStatitsics : true
+service.message.destination.log.outputStatistics : true
